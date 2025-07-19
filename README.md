@@ -37,3 +37,7 @@ Make sure MongoDB is running on your system, then:
 ```bash
 npm run dev
 ```
+
+## Hosted Postman Documentation
+
+[Visit API Documentation](https://documenter.getpostman.com/view/45518060/2sB34kEJfR)
