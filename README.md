@@ -8,7 +8,7 @@ A RESTful API for an e-commerce application built with Node.js, Express, and Mon
 - Role-based access control (admin/customer)
 - Product management (CRUD operations)
 - JWT token authentication
-- MongoDB database integration
+- MongoDB Atlas database integration
 
 ## Installation
 
@@ -16,6 +16,17 @@ A RESTful API for an e-commerce application built with Node.js, Express, and Mon
 2. Install dependencies: `npm install`
 3. Create a `.env` file with your environment variables
 4. Start the server: `npm run dev`
+
+## Configure Environment:
+
+### Copy .env.example to .env and update:
+
+```bash
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/ecommerce?retryWrites=true&w=majority
+JWT_SECRET=<your-jwt-secret>
+PORT=3000
+
+```
 
 ## API Endpoints
 
