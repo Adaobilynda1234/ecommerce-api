@@ -49,6 +49,10 @@ Make sure MongoDB is running on your system, then:
 npm run dev
 ```
 
+## Hosted API On Render
+
+[Visit Hosted API](https://ecommerce-api-yq6y.onrender.com/)
+
 ## Hosted Postman Documentation
 
 [Visit API Documentation](https://documenter.getpostman.com/view/45518060/2sB34kEJfR)
