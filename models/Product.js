@@ -9,6 +9,12 @@ const productSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
+    brand: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+      required: true,
+    },
     cost: { type: Number, required: true },
     productImages: [{ type: String }],
     description: { type: String, required: true },
@@ -18,5 +24,8 @@ const productSchema = new mongoose.Schema(
     timestamps: true, // Adds createdAt and updatedAt
   }
 );
+
+// Add pagination plugin
+productSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model("Product", productSchema);
