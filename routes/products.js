@@ -29,9 +29,9 @@ router.get("/:brand/:page/:limit", async (req, res) => {
       return res.status(400).json({ message: "Invalid page number" });
     }
 
-    if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+    if (isNaN(limitNum) || limitNum < 1 || limitNum > 10) {
       return res.status(400).json({
-        message: "Invalid limit. Must be between 1 and 100",
+        message: "Invalid limit. Must be between 1 and 10",
       });
     }
 
