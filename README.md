@@ -7,6 +7,7 @@ A RESTful API for an e-commerce application built with Node.js, Express, and Mon
 - User authentication (register/login)
 - Role-based access control (admin/customer)
 - Product management (CRUD operations)
+- Brands management(CRUD operations)
 - JWT token authentication
 - MongoDB Atlas database integration
 
@@ -40,6 +41,14 @@ PORT=3000
 - GET `/products` - Get all products (public)
 - POST `/products` - Add a product (admin only)
 - DELETE `/products/:id` - Delete a product (admin only)
+- GET `/products/:brandid/:page/:limit` - get a paginated products with brandid (public)
+
+### Brands
+
+- GET `/brands` - Get all brands (public)
+- POST `/brands` - Add a brand (admin only)
+- DELETE `/brands/:id` - Delete a brand (admin only)
+- PUT `/brands/:id` - update a brand (admin only)
 
 ## Usage
 
