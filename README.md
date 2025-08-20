@@ -7,7 +7,8 @@ A RESTful API for an e-commerce application built with Node.js, Express, and Mon
 - User authentication (register/login)
 - Role-based access control (admin/customer)
 - Product management (CRUD operations)
-- Brands management(CRUD operations)
+- Brands management (CRUD operations)
+- Order management system
 - JWT token authentication
 - MongoDB Atlas database integration
 
@@ -26,7 +27,6 @@ A RESTful API for an e-commerce application built with Node.js, Express, and Mon
 MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/ecommerce?retryWrites=true&w=majority
 JWT_SECRET=<your-jwt-secret>
 PORT=3000
-
 ```
 
 ## API Endpoints
@@ -41,14 +41,68 @@ PORT=3000
 - GET `/products` - Get all products (public)
 - POST `/products` - Add a product (admin only)
 - DELETE `/products/:id` - Delete a product (admin only)
-- GET `/products/:brandid/:page/:limit` - get a paginated products with brandid (public)
+- GET `/products/:brandid/:page/:limit` - Get paginated products with brandid (public)
 
 ### Brands
 
 - GET `/brands` - Get all brands (public)
 - POST `/brands` - Add a brand (admin only)
 - DELETE `/brands/:id` - Delete a brand (admin only)
-- PUT `/brands/:id` - update a brand (admin only)
+- PUT `/brands/:id` - Update a brand (admin only)
+
+### Orders
+
+- POST `/orders` - Create a new order (customers only)
+- GET `/orders` - Get all orders (admin only)
+- GET `/orders/:id` - Get a specific order (admin only)
+- PATCH `/orders/:id/status` - Update order status (admin only)
+- PATCH `/orders/:orderId/items/:itemId/shipping-status` - Update item shipping status (admin only)
+
+## Order Management
+
+### Creating an Order (Customer)
+
+Customers can create orders by sending an array of items:
+
+```json
+{
+  "items": [
+    {
+      "productName": "iPhone 15",
+      "productId": "60d5f60f1c4d4c001f5e4567",
+      "ownerId": "60d5f60f1c4d4c001f5e4568",
+      "quantity": 2,
+      "totalCost": 1998.0,
+      "shippingStatus": "pending"
+    }
+  ]
+}
+```
+
+### Order Status Values
+
+- **Order Status**: `pending`, `processing`, `completed`, `cancelled`
+- **Shipping Status**: `pending`, `shipped`, `delivered`
+
+### Admin Order Management
+
+Admins can:
+
+- View all orders
+- View individual order details
+- Update overall order status
+- Update individual item shipping status
+
+### Getting Item IDs for Updates
+
+To update an item's shipping status, you need both the `orderId` and `itemId`:
+
+1. Get the order: `GET /orders/:orderId`
+2. Find the item in the response's `items` array
+3. Use the item's `_id` field as the `itemId`
+4. Update shipping status: `PATCH /orders/:orderId/items/:itemId/shipping-status`
+
+**Note**: Don't confuse `itemId` (item's `_id`) with `productId` (product's `_id`)
 
 ## Usage
 
