@@ -68,7 +68,7 @@ Customers can create orders by sending an array of items:
 {
   "items": [
     {
-      "productName": "iPhone 15",
+      "productName": "iPhone 13",
       "productId": "60d5f60f1c4d4c001f5e4567",
       "ownerId": "60d5f60f1c4d4c001f5e4568",
       "quantity": 2,
