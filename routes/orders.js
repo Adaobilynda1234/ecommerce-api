@@ -129,6 +129,41 @@ router.get("/", authMiddleware(["admin"]), async (req, res) => {
   }
 });
 
+// GET /order-history - View order history (both customers and admins)
+router.get(
+  "/order-history",
+  authMiddleware(["customer", "admin"]),
+  async (req, res) => {
+    try {
+      let orders;
+
+      if (req.user.role === "admin") {
+        // Admins see all orders
+        orders = await Order.find()
+          .populate("customerId", "fullName email")
+          .populate("items.productId", "productName cost")
+          .populate("items.ownerId", "fullName")
+          .sort({ createdAt: -1 });
+      } else {
+        // Customers see only their own orders
+        orders = await Order.find({ customerId: req.user.userId })
+          .populate("customerId", "fullName email")
+          .populate("items.productId", "productName cost")
+          .populate("items.ownerId", "fullName")
+          .sort({ createdAt: -1 });
+      }
+
+      res.json({
+        message: "Order history retrieved successfully",
+        orders,
+        count: orders.length,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error: error.message });
+    }
+  }
+);
+
 // GET /orders/:id - View a specific order (admin only)
 router.get("/:id", authMiddleware(["admin"]), async (req, res) => {
   try {
@@ -222,6 +257,8 @@ router.patch(
         return res.status(404).json({ message: "Item not found in order" });
       }
 
+      // Store the old status for comparison
+      const oldStatus = item.shippingStatus;
       item.shippingStatus = shippingStatus;
       await order.save();
 
@@ -229,6 +266,21 @@ router.patch(
       await order.populate("customerId", "fullName email");
       await order.populate("items.productId", "productName cost");
       await order.populate("items.ownerId", "fullName");
+
+      // Send Socket.io notification to customer if status changed
+      if (oldStatus !== shippingStatus && req.app.get("io")) {
+        const io = req.app.get("io");
+        const notification = {
+          title: "New shipping status",
+          message: `Your last order shipping status has been updated to ${shippingStatus}`,
+        };
+
+        // Emit to the specific customer
+        io.to(`user_${order.customerId._id}`).emit(
+          "shipping_status_update",
+          notification
+        );
+      }
 
       res.json({
         message: "Item shipping status updated successfully",
