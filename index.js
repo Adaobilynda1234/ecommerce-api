@@ -27,7 +27,16 @@ app.set("io", io);
 
 // Socket.io authentication middleware
 const authenticateSocket = (socket, next) => {
-  const token = socket.handshake.auth.token;
+  // Check for token in multiple locations
+  let token = socket.handshake.auth.token; // Existing check
+  if (!token) {
+    // Check query parameters
+    token = socket.handshake.query.token;
+  }
+  if (!token && socket.handshake.headers.authorization) {
+    // Check headers (e.g., Authorization: Bearer <token>)
+    token = socket.handshake.headers.authorization.replace("Bearer ", "");
+  }
 
   if (!token) {
     return next(new Error("Authentication error: No token provided"));
