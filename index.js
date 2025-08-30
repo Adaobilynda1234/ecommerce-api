@@ -68,9 +68,21 @@ io.on("connection", (socket) => {
   });
 
   // Optional: Handle custom events
+  // socket.on("join_room", (roomId) => {
+  //   socket.join(roomId);
+  //   console.log(`User ${socket.userId} joined room ${roomId}`);
+  // });
+
   socket.on("join_room", (roomId) => {
+    if (typeof roomId !== "string" || !roomId) {
+      return socket.emit("error", { message: "Invalid roomId" });
+    }
     socket.join(roomId);
     console.log(`User ${socket.userId} joined room ${roomId}`);
+    socket.emit("room_joined", {
+      roomId,
+      message: `Successfully joined room ${roomId}`,
+    });
   });
 });
 
