@@ -59,6 +59,7 @@ io.use(authenticateSocket);
 
 io.on("connection", (socket) => {
   console.log(`User ${socket.userId} connected`);
+  // Join user to their own room for targeted notifications
   socket.join(`user_${socket.userId}`);
   socket.on("join_room", (roomId) => {
     if (typeof roomId !== "string" || !roomId) {
@@ -71,39 +72,11 @@ io.on("connection", (socket) => {
       message: `Successfully joined room ${roomId}`,
     });
   });
+  // Handle disconnect
   socket.on("disconnect", () => {
     console.log(`User ${socket.userId} disconnected`);
   });
 });
-// io.on("connection", (socket) => {
-//   console.log(`User ${socket.userId} connected`);
-
-//   // Join user to their own room for targeted notifications
-//   socket.join(`user_${socket.userId}`);
-
-//   // Handle disconnect
-//   socket.on("disconnect", () => {
-//     console.log(`User ${socket.userId} disconnected`);
-//   });
-
-//   // Optional: Handle custom events
-//   // socket.on("join_room", (roomId) => {
-//   //   socket.join(roomId);
-//   //   console.log(`User ${socket.userId} joined room ${roomId}`);
-//   // });
-
-//   socket.on("join_room", (roomId) => {
-//     if (typeof roomId !== "string" || !roomId) {
-//       return socket.emit("error", { message: "Invalid roomId" });
-//     }
-//     socket.join(roomId);
-//     console.log(`User ${socket.userId} joined room ${roomId}`);
-//     socket.emit("room_joined", {
-//       roomId,
-//       message: `Successfully joined room ${roomId}`,
-//     });
-//   });
-// });
 
 // Connect to MongoDB
 connectDB();
